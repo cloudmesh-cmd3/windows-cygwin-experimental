@@ -13,6 +13,10 @@ import subprocess
 
 class Shell(object):
 
+    cygwin_path = 'C:\cygwin64\bin'
+
+    
+    
     command = {
         'windows': {
             'ps': r'C:\cygwin64\bin\ps.exe',
@@ -22,8 +26,24 @@ class Shell(object):
         'linux': {
             'ps' : 'ps'
         }
-        }
+    }
 
+    @classmethod        
+    def find_cygwin_executables(cls):
+        """
+        find the executables 
+        """
+
+        commnads = ["ps"]         # list all *.exe in  cygwin path, use glob
+        for c in commands:
+            name = "name without exe" # basename
+            command["windows"][name] = "{:}\{:}.exe".format(cygwin_path, c)
+
+    @classmethod
+    def list(cls):
+        # prins all available commands in cygwin bin
+        #TODO
+        pass
 
     @classmethod
     def operating_system(cls):
