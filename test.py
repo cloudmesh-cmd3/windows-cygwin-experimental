@@ -17,7 +17,7 @@ class Shell(object):
         'windows': {
             'ps': r'C:\cygwin64\bin\ps.exe',
             'whoami': r'C:\cygwin64\bin\whoami.exe',
-            'ls' : r'C:\cygwin64\bin\ls.exe'
+            'ls' : "C:\\cygwin64\\bin\\ls.exe"
         },
         'linux': {
             'ps' : 'ps'
@@ -46,30 +46,30 @@ class Shell(object):
             print os_command
         result = None
         if capture:
-
-            #subprocess.check_output(cmd, arguments???)
-            you get it?
-            you need to find out how to do that
-            ok,
-            but the parameters must go on check or execute? isnt the chelk an implicit execute?
-            i dpnt know you will figure out.ut lets do this to github
-            result =  subprocess.check_output(os_command).strip()
+            if isinstance(arguments, list):
+                arguments.insert(0, cmd)
+                os_command = arguments
+            elif isinstance(arguments, str):
+                if arguments != "arg":
+                    os_command = cmd+" "+arguments
+            result = subprocess.check_output(os_command).strip()
         else:
-            result = subprocess.check_call(os_command????).strip()
+            result = subprocess.check_call(os_command).strip()
         return result
-
-look up hhow to pass arguments in documentation and implement
 
 
 def main():
     shell = Shell()
 
-    r = shell._execute('ps', "arg") # copy line replace
-    print r
+    #r = shell._execute('ps', "arg") # copy line replace
+    #print r
 
     r = shell._execute('whoami', "arg")
     print "-----{:}-----".format(r)
 
+    r = shell._execute('ls', ["-l", "-a"])
+    print "-----{:}-----".format(r)
+    print("=============")
     r = shell._execute('ls', "-l -a")
     print "-----{:}-----".format(r)
 
