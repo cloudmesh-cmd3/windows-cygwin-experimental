@@ -8,15 +8,15 @@
 # print (output)
 
 
-import subprocess
+import subprocess, glob
 
 
 class Shell(object):
 
-    cygwin_path = 'C:\cygwin64\bin'
+    cygwin_path = r'C:\cygwin64\bin'
 
-    
-    
+    command = {{}}
+    """
     command = {
         'windows': {
             'ps': r'C:\cygwin64\bin\ps.exe',
@@ -27,17 +27,20 @@ class Shell(object):
             'ps' : 'ps'
         }
     }
+    """
 
-    @classmethod        
+    @classmethod
     def find_cygwin_executables(cls):
         """
         find the executables 
         """
 
-        commnads = ["ps"]         # list all *.exe in  cygwin path, use glob
-        for c in commands:
-            name = "name without exe" # basename
-            command["windows"][name] = "{:}\{:}.exe".format(cygwin_path, c)
+        exe_paths = glob.glob(cls.cygwin_path + r'\*.exe')         # list all *.exe in  cygwin path, use glob
+        for c in exe_paths:
+            exe = c.split('\\')
+            name = exe[3].split('.')[0]
+            #command['windows'][name] = "{:}\{:}.exe".format(cygwin_path, c)
+            cls.command['windows'][name] = c
 
     @classmethod
     def list(cls):
@@ -67,11 +70,12 @@ class Shell(object):
         result = None
         if capture:
             if isinstance(arguments, list):
-                arguments.insert(0, cmd)
+                arguments.insert(0, os_command)
                 os_command = arguments
             elif isinstance(arguments, str):
                 if arguments != "arg":
-                    os_command = cmd+" "+arguments
+                    os_command = os_command + " " + arguments
+            print os_command
             result = subprocess.check_output(os_command).strip()
         else:
             result = subprocess.check_call(os_command).strip()
@@ -81,15 +85,15 @@ class Shell(object):
 def main():
     shell = Shell()
 
-    #r = shell._execute('ps', "arg") # copy line replace
-    #print r
+    r = shell._execute('ps', "arg") # copy line replace
+    print r
 
     r = shell._execute('whoami', "arg")
     print "-----{:}-----".format(r)
 
     r = shell._execute('ls', ["-l", "-a"])
     print "-----{:}-----".format(r)
-    print("=============")
+
     r = shell._execute('ls', "-l -a")
     print "-----{:}-----".format(r)
 
