@@ -15,8 +15,12 @@ class Shell(object):
 
     cygwin_path = r'C:\cygwin64\bin'
 
+
     command = {{}}
     """
+
+    
+
     command = {
         'windows': {
             'ps': r'C:\cygwin64\bin\ps.exe',
