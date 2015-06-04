@@ -24,6 +24,29 @@ class Shell(object):
         'darwin': {}
     }
 
+    '''
+
+    big question for badi and others
+
+    how do we now define dynamically functions based on a list that we want to support
+
+    what we want is where args are multiple unlimited parameters to the function
+
+    def f(args...):
+        name = get the name from f
+        a = list of args...
+
+        cls.execute(cmd, arguments=a, capture=True, verbose=False)
+
+    commands = ['ps', 'ls', ..... ]
+    for c in commands:
+        generate this command and add to this class dynamically
+
+    or do something more simple
+
+    ls = cls.execute('cmd', args...)   # i think that is what badi does
+
+    '''
     def __init__(cls):
         if cls.operating_system() == "windows":
             cls.find_cygwin_executables()
