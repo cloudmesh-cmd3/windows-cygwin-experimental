@@ -20,7 +20,8 @@ class Shell(object):
 
     command = {
         'windows': {},
-        'linux':{}
+        'linux':{},
+        'darwin': {}
     }
 
     def __init__(cls):
@@ -30,27 +31,11 @@ class Shell(object):
             pass
             # implement for cmd, for linux we can just pass as it includes everything
             
-
-    """
-    ahh is see you outcommented ;-)
-    command = {
-        'windows': {
-            'ps': r'C:\cygwin64\bin\ps.exe',
-            'whoami': r'C:\cygwin64\bin\whoami.exe',
-            'ls' : "C:\\cygwin64\\bin\\ls.exe"
-        },
-        'linux': {
-            'ps' : 'ps'
-        }
-    }
-    """
-
     @classmethod
     def find_cygwin_executables(cls):
         """
         find the executables 
         """
-
         exe_paths = glob.glob(cls.cygwin_path + r'\*.exe')
         print cls.cygwin_path
         # list all *.exe in  cygwin path, use glob
@@ -64,32 +49,54 @@ class Shell(object):
     @classmethod
     def terminal_type(cls):
         """
-        returns  cygwin, cmd, or bash
+        returns  darwin, cygwin, cmd, or linux
         """
-        result = 'cmd'
-        try:
-            # if the os is linux uname -o returns GNU/Linux
-            result = subprocess.check_output('uname -o').strip()
-        except Exception: #if os is windows then an exception is caught
-            pass
-        if result == "GNU/Linux":
-           result = "bash"
-        elif result == "Cygwin":
-            result = "cygwin"
-        return result
+        what = platform.system().lower()
+
+        kind = None
+
+        if 'linux' in what:
+            kind = 'linux'
+        elif 'darwin' in what:
+            kind = 'darwin'
+        elif 'cygwin' in what:
+            kind = 'cygwin'
+        else:
+            kind = 'cmd'
+
+        return kind
+
+    @classmethod
+    def ttype(cls):
+        t = cls.terminal_type()
+        if 'linux' in t or 'darwin' in t or 'cygwin' in t:
+            return 'linux'
+        elif 'cmd' in t:
+            return 'windows'
+
+    @classmethod
+    def command_exists(cls, name):
+        t = cls.ttype()
+        if 'windows' in t:
+            #only for windows
+            cls.find_cygwin_executables()
+            return name in cls.command['windows']
+        elif 'linux' in t:
+            # r = which(name) we have this somewhere
+            # lets just fake it and return True
+            return True
+
     
     @classmethod
-    def exists(cls, name): #only for windows
-        cls.find_cygwin_executables()
-        return name in cls.command['windows']
-    
-    @classmethod
-    def list(cls): #only for windows
-        cls.find_cygwin_executables()
-        print '\n'.join(cls.command['windows'])
-        # prins all available commands in cygwin bin
-        #TODO
-        pass
+    def list_commands(cls):
+        t = cls.ttype()
+        if 'windows' in t:
+            #only for windows
+            cls.find_cygwin_executables()
+            print '\n'.join(cls.command['windows'])
+        else:
+            print ("ERROR: this command is not supported for this OS")
+
 
     @classmethod
     def operating_system(cls):
@@ -97,7 +104,7 @@ class Shell(object):
 
 
     @classmethod
-    def _execute(cls, cmd, arguments="", capture=True, verbose=False):
+    def execute(cls, cmd, arguments="", capture=True, verbose=False):
         """Run Shell command
 
         :param cmd: command to run
@@ -106,16 +113,17 @@ class Shell(object):
         :return:
         """
 
-        terminal_type = cls.terminal_type()
+        terminal_type = cls.ttype()
         #print cls.command
 
-        if terminal_type == "cygwin" or cls.operating_system() == "linux":
+        if ('linux' in terminal_type):
             os_command = cmd
-        elif terminal_type == "cmd": # for cmd
-            os_command = cls.command[cls.operating_system()][cmd]
-            if not cls.exists(cmd):
+        elif 'cmd' in terminal_type: # for cmd
+            if not cls.command_exists(cmd):
                 print "ERROR: the command could not be found", cmd
                 return
+            else:
+                os_command = cls.command[cls.operating_system()][cmd]
 
         if verbose:
             print os_command
@@ -140,7 +148,7 @@ def main():
 
     print shell.terminal_type()
     
-    r = shell._execute('pwd') # copy line replace
+    r = shell.execute('pwd') # copy line replace
     print r
 
     #shell.list()
@@ -156,10 +164,10 @@ def main():
         print "{:}".format(r)        
         print "---------------------"
     """
-    r = shell._execute('ls', ["-l", "-a"])
+    r = shell.execute('ls', ["-l", "-a"])
     print "-----{:}-----".format(r)
 
-    r = shell._execute('ls', "-l -a")
+    r = shell.execute('ls', "-l -a")
     print "-----{:}-----".format(r)
 
 
