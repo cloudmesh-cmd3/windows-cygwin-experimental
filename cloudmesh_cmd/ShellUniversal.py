@@ -30,7 +30,7 @@ class Shell(object):
         else:
             pass
             # implement for cmd, for linux we can just pass as it includes everything
-            
+
     @classmethod
     def find_cygwin_executables(cls):
         """
@@ -75,6 +75,19 @@ class Shell(object):
             return 'windows'
 
     @classmethod
+    def which(cls, command):
+        t = cls.ttype()
+        if 'windows' in t and cls.command_exists(name):
+            return cls.command['windows'][name]
+        elif 'linux' in t:
+            cmd = ["which",command]
+            result = subprocess.check_output(cmd).strip()
+            if len(result) == 0:
+                return None
+            else
+                return result
+
+    @classmethod
     def command_exists(cls, name):
         t = cls.ttype()
         if 'windows' in t:
@@ -82,11 +95,9 @@ class Shell(object):
             cls.find_cygwin_executables()
             return name in cls.command['windows']
         elif 'linux' in t:
-            # r = which(name) we have this somewhere
-            # lets just fake it and return True
-            return True
+            r = which(name)
+            return r
 
-    
     @classmethod
     def list_commands(cls):
         t = cls.ttype()
@@ -141,6 +152,26 @@ class Shell(object):
             result = subprocess.check_call(os_command).strip()
         return result
 
+    @classmethod
+    def mkdir(cls, newdir):
+        """works the way a good mkdir should :)
+        - already exists, silently complete
+        - regular file in the way, raise an exception
+        - parent directory(ies) does not exist, make them as well
+        """
+        """http://code.activestate.com/recipes/82465-a-friendly-mkdir/"""
+        _newdir = path_expand(newdir)
+        if os.path.isdir(_newdir):
+            pass
+        elif os.path.isfile(_newdir):
+            raise OSError("a file with the same name as the desired "
+                          "dir, '%s', already exists." % _newdir)
+        else:
+            head, tail = os.path.split(_newdir)
+            if head and not os.path.isdir(head):
+                os.mkdir(head)
+            if tail:
+                os.mkdir(_newdir)
 
     
 def main():
