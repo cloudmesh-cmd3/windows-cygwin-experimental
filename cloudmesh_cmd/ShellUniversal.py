@@ -8,21 +8,31 @@
 # print (output)
 
 
-import subprocess, glob
-
+import subprocess
+import glob
+import json
+import platform
+import os
 
 class Shell(object):
 
-    cygwin_path = r'C:\cygwin64\bin'
+    cygwin_path = 'bin' #i copied fom C:\cygwin\bin
+
     command = {
         'windows': {},
         'linux':{}
     }
 
     def __init__(cls):
-        cls.find_cygwin_executables()
+        if cls.operating_system() == "windows":
+            cls.find_cygwin_executables()
+        else:
+            pass
+            # implement for cmd, for linux we can just pass as it includes everything
+            
 
     """
+    ahh is see you outcommented ;-)
     command = {
         'windows': {
             'ps': r'C:\cygwin64\bin\ps.exe',
@@ -41,26 +51,53 @@ class Shell(object):
         find the executables 
         """
 
-        exe_paths = glob.glob(cls.cygwin_path + r'\*.exe')         # list all *.exe in  cygwin path, use glob
+        exe_paths = glob.glob(cls.cygwin_path + r'\*.exe')
+        print cls.cygwin_path
+        # list all *.exe in  cygwin path, use glob
         for c in exe_paths:
             exe = c.split('\\')
-            name = exe[3].split('.')[0]
+            name = exe[1].split('.')[0]
             #command['windows'][name] = "{:}\{:}.exe".format(cygwin_path, c)
             cls.command['windows'][name] = c
 
+
     @classmethod
-    def list(cls):
+    def terminal_type(cls):
+        """
+        returns  cygwin, cmd, or bash
+        """
+        result = 'cmd'
+        try:
+            # if the os is linux uname -o returns GNU/Linux
+            result = subprocess.check_output('uname -o').strip()
+        except Exception: #if os is windows then an exception is caught
+            pass
+        if result == "GNU/Linux":
+           result = "bash"
+        elif result == "Cygwin":
+            result = "cygwin"
+        return result
+    
+    @classmethod
+    def exists(cls, name): #only for windows
+        cls.find_cygwin_executables()
+        return name in cls.command['windows']
+    
+    @classmethod
+    def list(cls): #only for windows
+        cls.find_cygwin_executables()
+        print '\n'.join(cls.command['windows'])
         # prins all available commands in cygwin bin
         #TODO
         pass
 
     @classmethod
     def operating_system(cls):
-        return 'windows'  # just fixing for now us sys to finw out
+        return platform.system().lower()
 
 
     @classmethod
-    def _execute(cls, cmd, arguments, capture=True, verbose=False):
+    def _execute(cls, cmd, arguments="", capture=True, verbose=False):
         """Run Shell command
 
         :param cmd: command to run
@@ -69,9 +106,17 @@ class Shell(object):
         :return:
         """
 
-        operating_system = 'windows' # just a fake thing
+        terminal_type = cls.terminal_type()
         #print cls.command
-        os_command = cls.command[cls.operating_system()][cmd]
+
+        if terminal_type == "cygwin" or cls.operating_system() == "linux":
+            os_command = cmd
+        elif terminal_type == "cmd": # for cmd
+            os_command = cls.command[cls.operating_system()][cmd]
+            if not cls.exists(cmd):
+                print "ERROR: the command could not be found", cmd
+                return
+
         if verbose:
             print os_command
         result = None
@@ -81,7 +126,7 @@ class Shell(object):
                 os_command = arguments
             elif isinstance(arguments, str):
                 if arguments != "arg":
-                    os_command = os_command + " " + arguments
+                    os_command = (os_command + " " + arguments).split()
             print os_command
             result = subprocess.check_output(os_command).strip()
         else:
@@ -89,22 +134,34 @@ class Shell(object):
         return result
 
 
+    
 def main():
     shell = Shell()
 
-    r = shell._execute('who', "arg") # copy line replace
+    print shell.terminal_type()
+    
+    r = shell._execute('pwd') # copy line replace
     print r
 
-    """
-    r = shell._execute('whoami', "arg")
-    print "-----{:}-----".format(r)
+    #shell.list()
 
+    #print json.dumps(shell.command, indent=4)
+
+    # test some commands without args
+    """
+    for cmd in ['whoami', 'pwd']:
+        r = shell._execute(cmd)
+        print "---------------------"
+        print "Command: {:}".format(cmd)
+        print "{:}".format(r)        
+        print "---------------------"
+    """
     r = shell._execute('ls', ["-l", "-a"])
     print "-----{:}-----".format(r)
 
     r = shell._execute('ls', "-l -a")
     print "-----{:}-----".format(r)
-    """
+
 
 if __name__ == "__main__":
     main()
