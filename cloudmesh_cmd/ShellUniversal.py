@@ -47,6 +47,87 @@ class Shell(object):
     ls = cls.execute('cmd', args...)   # i think that is what badi does
 
     '''
+
+    @classmethod
+    def ls(cls, *args): return cls.execute('ls', args)
+    @classmethod
+    def ps(cls, *args): return cls.execute('ps',args)
+    @classmethod
+    def bash(cls, *args): return cls.execute('bash',args)
+    @classmethod
+    def cat(cls, *args): return cls.execute('cat',args)
+    @classmethod
+    def git(cls, *args): return cls.execute('git',args)
+    @classmethod
+    def VBoxManage(cls, *args): return cls.execute('VBoxManage',args)
+    @classmethod
+    def blockdiag(cls, *args): return cls.execute('blockdiag',args)
+    @classmethod
+    def cm(cls, *args): return cls.execute('cm',args)
+    @classmethod
+    def fgmetric(cls, *args): return cls.execute('fgmetric',args)
+    @classmethod
+    def fgrep(cls, *args): return cls.execute('fgrep',args)
+    @classmethod
+    def gchproject(cls, *args): return cls.execute('gchproject',args)
+    @classmethod
+    def gchuser(cls, *args): return cls.execute('gchuser',args)
+    @classmethod
+    def glusers(cls, *args): return cls.execute('glusers',args)
+    @classmethod
+    def gmkproject(cls, *args): return cls.execute('gmkproject',args)
+    @classmethod
+    def grep(cls, *args): return cls.execute('grep',args)
+    @classmethod
+    def gstatement(cls, *args): return cls.execute('gstatement',args)
+    @classmethod
+    def head(cls, *args): return cls.execute('head',args)
+    @classmethod
+    def keystone(cls, *args): return cls.execute('keystone',args)
+    @classmethod
+    def kill(cls, *args): return cls.execute('kill',args)
+    @classmethod
+    def ls(cls, *args): return cls.execute('ls',args)
+    @classmethod
+    def mkdir(cls, newdir): return cls.execute('mkdir',args)
+    @classmethod
+    def mongoimport(cls, *args): return cls.execute('mongoimport',args)
+    @classmethod
+    def mysql(cls, *args): return cls.execute('mysql',args)
+    @classmethod
+    def nosetests(cls, *args): return cls.execute('nosetests',args)
+    @classmethod
+    def nova(cls, *args): return cls.execute('nova',args)
+    @classmethod
+    def ping(cls, *args): return cls.execute('ping',args)
+    @classmethod
+    def pwd(cls, *args): return cls.execute('pwd',args)
+    @classmethod
+    def rackdiag(cls, *args): return cls.execute('rackdiag',args)
+    @classmethod
+    def rm(cls, *args): return cls.execute('rm',args)
+    @classmethod
+    def rsync(cls, *args): return cls.execute('rsync',args)
+    @classmethod
+    def scp(cls, *args): return cls.execute('scp',args)
+    @classmethod
+    def sort(cls, *args): return cls.execute('sort',args)
+    @classmethod
+    def ssh(cls, *args): return cls.execute('ssh',args)
+    @classmethod
+    def sudo(cls, *args): return cls.execute('sudo',args)
+    @classmethod
+    def tail(cls, *args): return cls.execute('tail',args)
+    @classmethod
+    def vagrant(cls, *args): return cls.execute('vagrant',args)
+    @classmethod
+    def mongod(cls, *args): return cls.execute('mongod',args)
+    @classmethod
+    def which(cls, *args): return cls.execute('which',args)
+    @classmethod
+    def grep(cls, *args): return cls.execute('grep',args)
+
+
     def __init__(cls):
         if cls.operating_system() == "windows":
             cls.find_cygwin_executables()
@@ -60,7 +141,7 @@ class Shell(object):
         find the executables 
         """
         exe_paths = glob.glob(cls.cygwin_path + r'\*.exe')
-        print cls.cygwin_path
+        # print cls.cygwin_path
         # list all *.exe in  cygwin path, use glob
         for c in exe_paths:
             exe = c.split('\\')
@@ -107,7 +188,7 @@ class Shell(object):
             result = subprocess.check_output(cmd).strip()
             if len(result) == 0:
                 return None
-            else
+            else:
                 return result
 
     @classmethod
@@ -138,7 +219,7 @@ class Shell(object):
 
 
     @classmethod
-    def execute(cls, cmd, arguments="", capture=True, verbose=False):
+    def execute(cls, cmd, arguments=""):
         """Run Shell command
 
         :param cmd: command to run
@@ -146,33 +227,31 @@ class Shell(object):
         :param capture: if true returns the output
         :return:
         """
-
+        # print "--------------"
         terminal_type = cls.ttype()
-        #print cls.command
+        # print cls.command
 
         if ('linux' in terminal_type):
-            os_command = cmd
+            os_command = [cmd]
         elif 'cmd' in terminal_type: # for cmd
             if not cls.command_exists(cmd):
                 print "ERROR: the command could not be found", cmd
                 return
             else:
-                os_command = cls.command[cls.operating_system()][cmd]
+                os_command = [cls.command[cls.operating_system()][cmd]]
 
-        if verbose:
-            print os_command
-        result = None
-        if capture:
-            if isinstance(arguments, list):
-                arguments.insert(0, os_command)
-                os_command = arguments
-            elif isinstance(arguments, str):
-                if arguments != "arg":
-                    os_command = (os_command + " " + arguments).split()
-            print os_command
-            result = subprocess.check_output(os_command).strip()
+
+        if isinstance(arguments, list):
+            os_command = os_command + arguments
+        elif isinstance(arguments, tuple):
+            os_command = os_command + list(arguments)
+        elif isinstance(arguments, str):
+            os_command = os_command + arguments.split()
         else:
-            result = subprocess.check_call(os_command).strip()
+            print "ERROR: Wrong parameter type", type(arguments)
+
+        result = subprocess.check_output(os_command).strip()
+
         return result
 
     @classmethod
@@ -219,11 +298,22 @@ def main():
         print "---------------------"
     """
     r = shell.execute('ls', ["-l", "-a"])
-    print "-----{:}-----".format(r)
+    print r
 
     r = shell.execute('ls', "-l -a")
-    print "-----{:}-----".format(r)
+    print r
 
+
+    r = shell.ls("-aux")
+    print r
+
+    r = shell.ls("-a", "-u", "-x")
+    print r
+
+    r = shell.pwd()
+    print r
+
+    
 
 if __name__ == "__main__":
     main()
