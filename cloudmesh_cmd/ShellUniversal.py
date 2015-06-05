@@ -123,8 +123,6 @@ class Shell(object):
     @classmethod
     def mongod(cls, *args): return cls.execute('mongod',args)
     @classmethod
-    def which(cls, *args): return cls.execute('which',args)
-    @classmethod
     def grep(cls, *args): return cls.execute('grep',args)
 
 
