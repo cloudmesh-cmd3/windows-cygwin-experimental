@@ -95,3 +95,13 @@ class Cygwin(object):
             print "There are no cygwin folders"
 
 
+"""
+    Usage:
+
+        CygwinInstaller install
+        CygwinInstaller uninstall
+        CygwinInstaller info
+"""
+
+# implement a way to call this. use argpasre
+        
