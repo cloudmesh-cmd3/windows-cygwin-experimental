@@ -194,8 +194,7 @@ setup(
     package_data={'cloudmesh_cmd': data_dirs},
     entry_points={
         'console_scripts': [
-            'cm-shell = cmd.shell:main',
-            'cm.command = cmd.shell:main',            
+            'cm-cygwin-installer = cloudmesh_cmd.CygwinInstaller:main'
         ],
     },
     tests_require=['tox'],
