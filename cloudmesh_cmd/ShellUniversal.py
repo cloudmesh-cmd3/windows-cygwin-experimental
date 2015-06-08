@@ -13,6 +13,7 @@ import glob
 import json
 import platform
 import os
+import sys
 
 class Shell(object):
 
@@ -153,6 +154,12 @@ class Shell(object):
         """
         returns  darwin, cygwin, cmd, or linux
         """
+        uname = None
+        try:
+            uname = subprocess.check_output("uname -a")
+        except Exception:#"uname -a" cannot be used in cmd
+            pass
+
         what = platform.system().lower()
 
         kind = None
@@ -161,11 +168,13 @@ class Shell(object):
             kind = 'linux'
         elif 'darwin' in what:
             kind = 'darwin'
-        elif 'cygwin' in what:
+        elif 'windows' in what and 'cygwin' in uname:
             kind = 'cygwin'
-        else:
+        elif 'windows' in what and 'cygwin' not in uname:
             kind = 'cmd'
-
+        else:
+            print "unsuported operating system", what, uname
+            sys.exit()
         return kind
 
     @classmethod
