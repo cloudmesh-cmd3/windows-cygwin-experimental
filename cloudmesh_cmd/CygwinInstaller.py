@@ -142,7 +142,7 @@ def main(argv=None):
             sys.exit()    
         elif 'info' in argv:
             if "-d" in argv:
-                print "Dryrun cygwin uninstall"
+                print "Dryrun cygwin info"
             else:
                 cygwin.info()
             sys.exit()
