@@ -6,6 +6,7 @@ import getpass
 import glob
 import os
 import argparse
+import sys
 
 from subprocess import Popen
 
@@ -110,24 +111,33 @@ class Cygwin(object):
         CygwinInstaller info
 """
 
+help_msg = """
+Usage: jjj
+   CygwinInstaller install
+   CygwinInstaller uninstall
+   CygwinInstaller info
+"""
 
-parser = argparse.ArgumentParser()
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
+    command = sys.argv[1]
 
-#command is one of:
-  #install
-  #uninstall
-  #info
-parser.add_argument("command", type=str, help="Usage:\n\tCygwinInstaller install\n\tCygwinInstaller uninstall\n\tCygwinInstaller info")
-args = parser.parse_args()
-command = args.command
-cygwin = Cygwin()
+    if "windows" in sys.platform.lower() :
+        cygwin = Cygwin()    
+        if 'install' == command:
+            cygwin.install()
+            sys.exit()
+        elif 'uninstall' == command:
+            cygwin.uninstall()
+            sys.exit()    
+        elif 'info' == command:
+            cygwin.info()
+            sys.exit()
+        else:
+            print help_msg
+    else:
+        print "ERROR: this platform does not support Cygwin"
 
-if 'install' == command:
-    cygwin.install()
-elif 'uninstall' == command:
-    cygwin.uninstall()
-elif 'info' == command:
-    cygwin.info()
-    print install_bat_file
-else:
-    print 'invalid option --',command
+if __name__ == "__main__":
+    main()
