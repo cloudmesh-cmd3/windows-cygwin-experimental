@@ -6,6 +6,7 @@ import getpass
 import glob
 import os
 import argparse
+import sys
 
 from subprocess import Popen
 
@@ -110,24 +111,45 @@ class Cygwin(object):
         CygwinInstaller info
 """
 
+help_msg = """
+Usage:
+   CygwinInstaller [-d] install
+   CygwinInstaller [-d] uninstall
+   CygwinInstaller [-d] info
 
-parser = argparse.ArgumentParser()
+Options:
+   -d    Dryrun. It does not executes the command.
+"""
 
-#command is one of:
-  #install
-  #uninstall
-  #info
-parser.add_argument("command", type=str, help="Usage:\n\tCygwinInstaller install\n\tCygwinInstaller uninstall\n\tCygwinInstaller info")
-args = parser.parse_args()
-command = args.command
-cygwin = Cygwin()
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv
 
-if 'install' == command:
-    cygwin.install()
-elif 'uninstall' == command:
-    cygwin.uninstall()
-elif 'info' == command:
-    cygwin.info()
-    print install_bat_file
-else:
-    print 'invalid option --',command
+    # if "windows" in sys.platform.lower() :
+    if True:
+        cygwin = Cygwin()    
+        if 'install' in argv:
+            if "-d" in argv:
+                print "Dryrun cygwin install"
+            else:
+                cygwin.install()
+            sys.exit()
+        elif 'uninstall' in argv:
+            if "-d" in argv:
+                print "Dryrun cygwin uninstall"
+            else:
+                cygwin.uninstall()
+            sys.exit()    
+        elif 'info' in argv:
+            if "-d" in argv:
+                print "Dryrun cygwin uninstall"
+            else:
+                cygwin.info()
+            sys.exit()
+        else:
+            print help_msg
+    else:
+        print "ERROR: this platform does not support Cygwin"
+
+if __name__ == "__main__":
+    main()
