@@ -112,27 +112,39 @@ class Cygwin(object):
 """
 
 help_msg = """
-Usage: jjj
-   CygwinInstaller install
-   CygwinInstaller uninstall
-   CygwinInstaller info
+Usage:
+   CygwinInstaller [-d] install
+   CygwinInstaller [-d] uninstall
+   CygwinInstaller [-d] info
+
+Options:
+   -d    Dryrun. It does not executes the command.
 """
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv
-    command = sys.argv[1]
 
-    if "windows" in sys.platform.lower() :
+    # if "windows" in sys.platform.lower() :
+    if True:
         cygwin = Cygwin()    
-        if 'install' == command:
-            cygwin.install()
+        if 'install' in argv:
+            if "-d" in argv:
+                print "Dryrun cygwin install"
+            else:
+                cygwin.install()
             sys.exit()
-        elif 'uninstall' == command:
-            cygwin.uninstall()
+        elif 'uninstall' in argv:
+            if "-d" in argv:
+                print "Dryrun cygwin uninstall"
+            else:
+                cygwin.uninstall()
             sys.exit()    
-        elif 'info' == command:
-            cygwin.info()
+        elif 'info' in argv:
+            if "-d" in argv:
+                print "Dryrun cygwin uninstall"
+            else:
+                cygwin.info()
             sys.exit()
         else:
             print help_msg
