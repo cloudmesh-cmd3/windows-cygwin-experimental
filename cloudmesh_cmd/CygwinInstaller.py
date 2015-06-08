@@ -5,10 +5,12 @@ import subprocess
 import getpass
 import glob
 import os
+import argparse
 
 from subprocess import Popen
 
-
+data = {}
+data['package'] = "emacs-w32,curl,openssh"
 
 install_bat_file = """
 REM do NOT run this file. Must be run cygwin-install.py instead. 
@@ -26,7 +28,7 @@ SETLOCAL
   SET ROOTDIR=-R %DFLTROOTDIR%
   
 REM add packages here
-SET PACKAGES=-P emacs-w32,curl,openssh
+SET PACKAGES=-P {package}
 
 REM installs cygwin
 ECHO [INFO] C:\Temp\cygwindownload\setup.exe -q -D -L %SITE% %LOCALDIR% %PACKAGES%
@@ -35,30 +37,35 @@ C:\Temp\cygwindownload\setup.exe -q -D -L %SITE% %LOCALDIR% %PACKAGES%
 REM removes Temp folder
 rd /s /q "C:\Temp\"
 ECHO [INFO] Cygwin installation is complete
-"""
+""".format(**data)
 
 class Cygwin(object):
 
     dir_download = 'C:\\Temp\\cygwindownload'
     setup_url = 'https://cygwin.com/setup-x86.exe'
-    setup_exe = dir_download + '\\setup.exe')
+    setup_exe = dir_download + '\\setup.exe'
 
     @classmethod
     def info(cls):
         print "Version of Cygwin:", "TODO"
-        print "Download Path:", "TODO"
-        print "Package:" "TODO"
+        print "Download Path:", cls.dir_download
+        print "Package:", data['package']
     
     @classmethod
     def install(cls):
         directory = 'C:\\Temp\\cygwindownload'
-        if not os.path.isdir(dir_download):
-           os.makedirs(dir_download)
-        urllib.urlretrieve(setup_url, setup_exe)
+        if not os.path.isdir(cls.dir_download):
+           os.makedirs(cls.dir_download)
+        urllib.urlretrieve(cls.setup_url, cls.setup_exe)
 
-        # TODO write install_bat_file to "cygwin-install.bat" I suggest to put this in
-        # download dir and than do the popen from download dir 
-        p = Popen("cygwin-install.bat")
+        data = {}
+        data['username'] = getpass.getuser()
+        #puts bat file, that installs cygwin, in download dir
+        downloads_private_path = 'C:\\Users\\{username}\\Downloads\\cygwin-install.bat'.format(**data)
+        with open(downloads_private_path, "w") as text_file:
+            text_file.write(install_bat_file)
+
+        p = Popen(downloads_private_path)
         stdout, stderr = p.communicate()
 
     @classmethod
@@ -103,5 +110,24 @@ class Cygwin(object):
         CygwinInstaller info
 """
 
-# implement a way to call this. use argpasre
-        
+
+parser = argparse.ArgumentParser()
+
+#command is one of:
+  #install
+  #uninstall
+  #info
+parser.add_argument("command", type=str, help="Usage:\n\tCygwinInstaller install\n\tCygwinInstaller uninstall\n\tCygwinInstaller info")
+args = parser.parse_args()
+command = args.command
+cygwin = Cygwin()
+
+if 'install' == command:
+    cygwin.install()
+elif 'uninstall' == command:
+    cygwin.uninstall()
+elif 'info' == command:
+    cygwin.info()
+    print install_bat_file
+else:
+    print 'invalid option --',command
