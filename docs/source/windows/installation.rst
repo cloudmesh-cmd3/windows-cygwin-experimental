@@ -40,13 +40,17 @@ Put the following command into Cygwin terminal (its shorcut can be found on your
 
   install apt-cyg /bin
 
-4 - Install additional packages
+Step 4: Install additional packages
 ---------------------------
 
 Run the following command in Cygwin terminal::
   
-  apt-cyg install package_name
-  
+  apt-cyg install wget curl connect-proxy emacs gedit openssh git graphviz grep make nano pico ncurses nc openssl ping pylint rsync keychain tail head vi vim which
+
+Packages can be found `here`_
+
+.. _here: https://cygwin.com/packages/package_list.html 
+ 
 Note: replace package_name with the package you want to install or with a list of packages separated by space. 
 
 
