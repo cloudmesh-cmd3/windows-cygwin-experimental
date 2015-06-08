@@ -49,9 +49,7 @@ Run the following command in Cygwin terminal::
 
 Packages can be found `here`_
 
-.. _here: https://cygwin.com/packages/package_list.html 
- 
-Note: replace package_name with the package you want to install or with a list of packages separated by space. 
+.. _here: https://cygwin.com/packages/package_list.html
 
 
 
