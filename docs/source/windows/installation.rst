@@ -56,12 +56,9 @@ Packages can be found `here`_
 We recommend that you install some packages that you may need in
 future. This includes the following packages.
 
-TODO: identify from the package list which are installe dby default in
-cygwin and remove them from this list
 
 Security::
 
-  openssl
   opensssh
   keychain
 
@@ -70,7 +67,6 @@ Editors::
   nano  
   pico
   emacs
-  vi
   vim
 
 Development::
@@ -81,15 +77,11 @@ Development::
   
 Linux::
 
-  grep
-  head
   ncurses  
   nc
   ping
-  rsync
-  tail
+  xtail
   wget
-  which
 
 Visuzalization::
 
