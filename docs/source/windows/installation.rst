@@ -45,7 +45,7 @@ Step 4: Install additional packages
 
 Run the following command in Cygwin terminal::
   
-  apt-cyg install wget curl connect-proxy emacs gedit openssh git graphviz grep make nano pico ncurses nc openssl ping pylint rsync keychain tail head vi vim which
+  apt-cyg install wget curl connect-proxy emacs gedit openssh git graphviz grep make nano ncurses nc openssl ping pylint rsync keychain head vi vim which
 
 Packages can be found `here`_
 
