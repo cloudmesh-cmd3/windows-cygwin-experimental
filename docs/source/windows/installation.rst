@@ -65,7 +65,6 @@ Security::
 Editors::
 
   nano  
-  pico
   emacs
   vim
 
