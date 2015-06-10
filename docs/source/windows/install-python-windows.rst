@@ -13,7 +13,7 @@ Step 2: Installing Python
 
   a. Navigate to the download location on your computer, double clicking the file and pressing run when the dialog box pops up.
   b. Select the "Install Just for me" option then press "Next".
-  c. Leave the Destination Directory as is and select Next.
+  c. Leave the Destination Directory as is and select "Next".
   d. Find the "Add Python.exe to Path" option. Choose the "Wil be installed on local hard drive" option then press "Next". 
   e. Click on "Finish".
 
