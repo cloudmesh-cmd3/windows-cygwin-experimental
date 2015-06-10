@@ -1,15 +1,15 @@
 How to install Python on Windows
-===========================
+=================================================================================================================================
 
 Step 1: Download Python 2.7
---------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------
 
 It can be found `here`_
 
   .. _here: https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
 
 Step 2: Installing Python
---------------------
+---------------------------------------------------------------------------------------------------------------------------------
 
   a. Navigate to the download location on your computer, double clicking the file and pressing run when the dialog box pops up.
   b. Select the "Install Just for me" option then press "Next".

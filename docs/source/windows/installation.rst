@@ -1,5 +1,5 @@
 Cygwin Installation
-===========
+=========================================================================================================
 
 We install cygwin via chocolatey. To do so you first have to
 install chocolatey.
@@ -9,7 +9,7 @@ Please open a cmd.exe window as administrator (you can do this as follows):
 ....
 
 Step 1: Install Chocolatey
--------------------------
+---------------------------------------------------------------------------------------------------------
 
 You have to copy and paste **one** of the following comamnds into a terminal (cmd or PowerShell).
 
@@ -23,7 +23,7 @@ Or if you prefer to use PowerShell you can say::
 
 
 Step 2: Install Cygwin
-------------------------
+---------------------------------------------------------------------------------------------------------
 
 Put the following line into cmd.exe::
   
@@ -32,7 +32,7 @@ Put the following line into cmd.exe::
 Note: if Cygwin is already installed, --force will reinstall it.
 
 Step 3: Install apt-cyg
---------------------------
+---------------------------------------------------------------------------------------------------------
 
 Put the following command into Cygwin terminal (its shorcut can be found on your Desktop)::
   
@@ -41,7 +41,7 @@ Put the following command into Cygwin terminal (its shorcut can be found on your
   install apt-cyg /bin
 
 Step 4: Install additional packages
----------------------------
+---------------------------------------------------------------------------------------------------------
 
 Run the following command in Cygwin terminal::
   
@@ -86,9 +86,3 @@ Visuzalization::
 
   graphviz
   dialog
-
-
-
-
-
-
