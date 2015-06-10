@@ -2,8 +2,7 @@ Content
 ===========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    installation
-   install-python-windows
    manual
