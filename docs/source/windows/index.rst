@@ -5,4 +5,5 @@ Content
    :maxdepth: 2
 
    installation
+   install-python-windows
    manual
